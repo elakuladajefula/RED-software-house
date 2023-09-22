@@ -15,10 +15,10 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let data = await collectData(city);
-    if (data.length == 2) {
+    if (data.length == 3) {
       console.log(data[0]);
-      console.log(getDate());
       console.log(data[1]);
+      console.log(data[2]);
     }
   }
 
@@ -43,20 +43,12 @@ async function collectData(city) {
   const returnData = [];
   if (response.status == 200) {
     const data = await fetch(fullUrl).then((data) => data.json());
-    const returnData = [data.location.name, data.current.temp_c];
+    const returnData = [data.location.name, data.current.last_updated.slice(0, 10), data.current.temp_c];
     return returnData;
   } else {
     alert("Error fetching data");
     return returnData;
   }
-}
-
-function getDate() {
-  let dateObj = new Date();
-  let month = dateObj.getUTCMonth() + 1;
-  let day = dateObj.getUTCDate();
-  let year = dateObj.getUTCFullYear();
-  return year + "-" + month + "-" + day;
 }
 
 export default App;
