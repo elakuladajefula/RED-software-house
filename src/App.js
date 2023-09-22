@@ -15,10 +15,18 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let data = await collectData(city);
-    if (data.length == 3) {
+    if (data.length === 3) {
       console.log(data[0]);
       console.log(data[1]);
       console.log(data[2]);
+      let stored = localStorage.getItem(data[0]);
+      if (stored === undefined || stored === '') {
+        localStorage.setItem(data[0], 1);
+      } else {
+        stored++;
+        localStorage.setItem(data[0], stored);
+      }
+      console.log(stored);
     }
   }
 
@@ -41,7 +49,7 @@ async function collectData(city) {
   const fullUrl = apiUrl + city;
   const response = await fetch(fullUrl);
   const returnData = [];
-  if (response.status == 200) {
+  if (response.status === 200) {
     const data = await fetch(fullUrl).then((data) => data.json());
     const returnData = [data.location.name, data.current.last_updated.slice(0, 10), data.current.temp_c];
     return returnData;
