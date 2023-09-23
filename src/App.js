@@ -1,24 +1,14 @@
 import './App.css';
 import { useState } from "react";
 
-class Weather {
-  constructor(city, date, temperature) {
-    this.city = city;
-    this.date = date;
-    this.temperature = temperature;
-  }
-}
-
 function App() {
+  const [rowsData, setRowsData] = useState([]);
   const [city, searchCity] = useState("");
-
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     let data = await collectData(city);
     if (data.length === 3) {
-      console.log(data[0]);
-      console.log(data[1]);
-      console.log(data[2]);
       let stored = localStorage.getItem(data[0]);
       if (stored === undefined || stored === '') {
         localStorage.setItem(data[0], 1);
@@ -26,22 +16,48 @@ function App() {
         stored++;
         localStorage.setItem(data[0], stored);
       }
-      console.log(stored);
+      const rowsInput = {city: data[0], date: data[1], temperature: data[2]};
+      setRowsData([...rowsData, rowsInput]);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Search city:
-        <input 
-          type="text" 
-          value={city}
-          onChange={(e) => searchCity(e.target.value)}
-        />
-      </label>
-      <input type="submit" />
-    </form>
-  )
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>Search city:
+          <input 
+            type="text" 
+            value={city}
+            onChange={(e) => searchCity(e.target.value)}
+          />
+        </label>
+        <input type="submit" />
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>City</th>
+            <th>Date</th>
+            <th>Temperature</th>
+            <th>Searched</th>
+          </tr>
+        </thead>
+        {rowsData.map((val, key) => {
+          return (
+            <tbody>
+              <tr key={key}>
+                <td>{val.city}</td>
+                <td>{val.date}</td>
+                <td>{val.temperature} (st C)</td>
+                <td>{localStorage.getItem(val.city)} time(s)</td>
+              </tr>
+            </tbody>
+          )
+        })}
+      </table>
+    </div>
+  );
 }
 
 async function collectData(city) {
