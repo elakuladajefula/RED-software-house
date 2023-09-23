@@ -22,19 +22,20 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="container">
       <form onSubmit={handleSubmit}>
         <label>Search city:
           <input 
             type="text" 
             value={city}
             onChange={(e) => searchCity(e.target.value)}
+            className="formInput"
           />
         </label>
-        <input type="submit" />
+        <input type="submit" value="Search" className="submitBtn"/>
       </form>
 
-      <table>
+      <table className="tableClass">
         <thead>
           <tr>
             <th>City</th>
