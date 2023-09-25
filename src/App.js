@@ -95,7 +95,7 @@ function getDataFromStorage() {
   return data;
 }
 
-//save data to local storagedik
+//save data to local storage
 function saveDataInStorage(data, input) {
   let jsonData = [...data, input];
   localStorage.setItem('weatherData', JSON.stringify(jsonData))
