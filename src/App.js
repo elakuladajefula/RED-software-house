@@ -1,10 +1,20 @@
 import './App.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [rowsData, setRowsData] = useState([]);
   const [city, searchCity] = useState("");
+
+  var jsonData = getDataFromStorage();
+  jsonData = JSON.parse(jsonData);
+  //on load read data saved from previous sessions
+  useEffect(() => {
+    if(jsonData !== undefined && jsonData !== '') {
+      setRowsData([...rowsData, ...jsonData]);
+    }
+  }, []);
  
+  //add new search to table and save to storage
   const handleSubmit = async (event) => {
     event.preventDefault();
     let data = await collectData(city);
@@ -18,6 +28,7 @@ function App() {
       }
       const rowsInput = {city: data[0], date: data[1], temperature: data[2]};
       setRowsData([...rowsData, rowsInput]);
+      saveDataInStorage(jsonData, rowsInput);
     }
   }
 
@@ -61,6 +72,7 @@ function App() {
   );
 }
 
+//collect data from api
 async function collectData(city) {
   const apiUrl = "https://api.weatherapi.com/v1/current.json?key=3dfce0a016e541dbb87120605232209&q=";
   const fullUrl = apiUrl + city;
@@ -75,5 +87,18 @@ async function collectData(city) {
     return returnData;
   }
 }
+
+//get data from local storage
+function getDataFromStorage() {
+  let data = [];
+  data = localStorage.getItem('weatherData');
+  return data;
+}
+
+//save data to local storagedik
+function saveDataInStorage(data, input) {
+  let jsonData = [...data, input];
+  localStorage.setItem('weatherData', JSON.stringify(jsonData))
+};
 
 export default App;
