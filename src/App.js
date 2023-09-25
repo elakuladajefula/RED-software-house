@@ -10,7 +10,7 @@ function App() {
   //on load read data saved from previous sessions
   useEffect(() => {
     if(jsonData !== undefined && jsonData !== '') {
-      setRowsData([...rowsData, ...jsonData]);
+      setRowsData([, ...jsonData]);
     }
   }, []);
  
